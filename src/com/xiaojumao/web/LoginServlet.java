@@ -32,6 +32,7 @@ public class LoginServlet extends HttpServlet {
         resp.setContentType("text/html; charset=utf-8;");
         if(users != null){
             // 验证成功
+            req.getSession().setAttribute("u1", users);
             resp.sendRedirect("index.jsp");
         }else{
             // 验证失败
