@@ -33,7 +33,7 @@
 		<span>
                 <span style="float: left;">当前位置是：教务中心-》学生管理</span>
                 <span style="float: right; margin-right: 8px; font-weight: bold;">
-                    <a style="text-decoration: none;" href="GetGradeServlet?pageIndex=${pageIndex}">【新增学生】</a>&emsp;&emsp;&emsp;&emsp;
+                    <a style="text-decoration: none;" href="GetGradeServlet?pageIndex=${pageInfo.pageIndex}">【新增学生】</a>&emsp;&emsp;&emsp;&emsp;
                 </span>
             </span>
 	</div>
@@ -42,14 +42,14 @@
 		<div>
 				<form action="StuList" method="post">
                     学生名称: 
-					<input type="text" name="stuName" value="${stuName}" />
+					<input type="text" name="stuName" value="${pageInfo.stuName}" />
                      学生学号: 
-					<input type="text" name="stuNo" value="${stuNo}" />
+					<input type="text" name="stuNo" value="${pageInfo.stuNo}" />
 					性别: 
 					<select name="sex">
 							<option value="-1">--请选择--</option>
-							<option value="1" ${sex==1?"selected":""}>男</option>
-							<option value="0" ${sex==0?"selected":""}>女</option>
+							<option value="1" ${pageInfo.sex==1?"selected":""}>男</option>
+							<option value="0" ${pageInfo.sex==0?"selected":""}>女</option>
 					</select>
 					<input type="submit" value="查询" />
                 </form>
@@ -68,7 +68,7 @@
 						<th>操作</th>
                     </tr>
 
-					<c:forEach  items="${stuList}" var="stu">
+					<c:forEach  items="${pageInfo.stuList}" var="stu">
                     <tr id="product1">
                         <td align="center">${stu.stuNo}</td>
 						<td align="center">${stu.stuName}</td>
@@ -77,8 +77,8 @@
 						<td align="center">${stu.profession}</td>
                         <td align="center">${stu.regDate}</td>
 						<td align="center">
-							<a href="EditGetStu?stuId=${stu.stuId}">修改</a>
-							<a href="javascript:if(confirm('确定要删除吗?')){location='DeleteStuServlet?stuId=${stu.stuId}&pageIndex=${pageIndex}'}">删除</a>
+							<a href="EditGetStu?stuId=${stu.stuId}&pageIndex=${pageInfo.pageIndex}">修改</a>
+							<a href="javascript:if(confirm('确定要删除吗?')){location='DeleteStuServlet?stuId=${stu.stuId}&pageIndex=${pageInfo.pageIndex}'}">删除</a>
 						</td> 				                    
                     </tr>
 					</c:forEach>
@@ -86,11 +86,11 @@
 					
                     <tr>
                         <td colspan="20" style="text-align: center;">						
-						<a style="text-decoration: none;" href="StuList?pageIndex=1&stuName=${stuName}&stuNo=${stuNo}&sex=${sex}">首页</a>
-						<a style="text-decoration: none;" href="StuList?pageIndex=${pageIndex-1<=1?1:pageIndex-1}&stuName=${stuName}&stuNo=${stuNo}&sex=${sex}">上一页</a>
-						<a style="text-decoration: none;" href="StuList?pageIndex=${pageIndex+1>=pageTotal?pageTotal:pageIndex+1}&stuName=${stuName}&stuNo=${stuNo}&sex=${sex}">下一页</a>
-						<a style="text-decoration: none;" href="StuList?pageIndex=${pageTotal}&stuName=${stuName}&stuNo=${stuNo}&sex=${sex}">尾页</a>
-                        共${indexTotal}条 每页显示 ${pageIndex}/${pageTotal}
+						<a style="text-decoration: none;" href="StuList?pageIndex=1&stuName=${pageInfo.stuName}&stuNo=${pageInfo.stuNo}&sex=${pageInfo.sex}">首页</a>
+						<a style="text-decoration: none;" href="StuList?pageIndex=${pageInfo.pageIndex-1<=1?1:pageInfo.pageIndex-1}&stuName=${pageInfo.stuName}&stuNo=${pageInfo.stuNo}&sex=${sex}">上一页</a>
+						<a style="text-decoration: none;" href="StuList?pageIndex=${pageInfo.pageIndex+1>=pageInfo.pageTotal?pageInfo.pageTotal:pageInfo.pageIndex+1}&stuName=${pageInfo.stuName}&stuNo=${pageInfo.stuNo}&sex=${pageInfo.sex}">下一页</a>
+						<a style="text-decoration: none;" href="StuList?pageIndex=${pageInfo.pageTotal}&stuName=${pageInfo.stuName}&stuNo=${pageInfo.stuNo}&sex=${pageInfo.sex}">尾页</a>
+                        共${pageInfo.indexTotal}条 每页显示 ${pageInfo.pageIndex}/${pageInfo.pageTotal}
                         </td>
                     </tr>
                 </tbody>

@@ -32,34 +32,11 @@ public interface StudentService {
     public int updateStudent(Student student);
 
     /**
-     * 根据stuId查找Student
-     * @param stuId
-     * @param stuList
-     * @return
-     */
-    public Student findStudentByStuId(Integer stuId, List<Student> stuList);
-
-    /**
-     * 更新session中的student信息
-     * @param student
-     * @param stuList
-     * @return
-     */
-    public List<Student> updateSessionStu(Student student, List<Student> stuList);
-
-    /**
      * 根据stuId删除数据库的学生信息
      * @param stuId
      * @return
      */
     public boolean deleteStuByStuId(String stuId);
-
-    /**
-     * 根据stuId删除session的学生信息
-     * @param stuId
-     * @return
-     */
-    public boolean deleteSessionStuByStuId(String stuId, List<Student> sessionList);
 
     /**
      * 添加学生信息
@@ -76,4 +53,25 @@ public interface StudentService {
      * @return
      */
     public int getIndexTotal(String stuName, String stuNo, int sex);
+
+
+    /**
+     * 根据学号查询学生信息
+     */
+    public Student checkStuByStuNo(String stuNo);
+
+    /**
+     * 根据邮箱查询学生信息
+     */
+    public Student checkStuByEmail(String email);
+
+    /**
+     * 根据联系电话查询学生信息
+     */
+    public Student checkStuByPhone(String phone);
+
+    /**
+     * 根据身份证号查询学生信息
+     */
+    public Student checkStuByIdNumber(String idNumber);
 }

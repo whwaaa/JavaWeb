@@ -4,6 +4,8 @@ import com.xiaojumao.bean.Grade;
 import com.xiaojumao.bean.Student;
 import com.xiaojumao.service.imp.GradeServiceImp;
 import com.xiaojumao.service.imp.StudentServiceImp;
+import com.xiaojumao.utils.PageInfo;
+import com.xiaojumao.utils.SexEnum;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,7 +26,11 @@ import java.util.List;
         "/Educational/student/DeleteStuServlet",
         "/Educational/student/EditGetStu",
         "/Educational/student/EditServlet",
-        "/Educational/student/StuList"})
+        "/Educational/student/StuList",
+        "/Educational/student/CkeckStuNo",
+        "/Educational/student/CheckEmail",
+        "/Educational/student/CkeckPhone",
+        "/Educational/student/CkeckIdNumber"})
 public class StudentSerlvet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -39,7 +45,16 @@ public class StudentSerlvet extends HttpServlet {
             EditServlet(req, resp);
         }else if(uri.endsWith("StuList")){
             StuList(req, resp);
+        }else if(uri.endsWith("CkeckStuNo")){
+            CkeckStuNo(req, resp);
+        }else if(uri.endsWith("CheckEmail")){
+            CheckEmail(req, resp);
+        }else if(uri.endsWith("CkeckPhone")){
+            CkeckPhone(req, resp);
+        }else if(uri.endsWith("CkeckIdNumber")){
+            CkeckIdNumber(req, resp);
         }
+
     }
 
     /**
@@ -104,10 +119,11 @@ public class StudentSerlvet extends HttpServlet {
         // 1.获取参数
         Integer stuId = Integer.parseInt(req.getParameter("stuId"));
         // 获取分页参数
+        PageInfo pageInfo = new PageInfo();
         String pageIndex1 = req.getParameter("pageIndex");
-        int pageIndex = 1;
+        pageInfo.setPageIndex(1);
         if(pageIndex1!=null && pageIndex1!="")
-            pageIndex = Integer.parseInt(pageIndex1);
+            pageInfo.setPageIndex(Integer.parseInt(pageIndex1));
 
         // 2.调取service方法
         StudentServiceImp studentServiceImp = new StudentServiceImp();
@@ -118,7 +134,7 @@ public class StudentSerlvet extends HttpServlet {
         List<Grade> grade = gradeServiceImp.getGrade();
 
         // 3.跳转页面
-        req.setAttribute("pageIndex", pageIndex);
+        req.setAttribute("pageInfo", pageInfo);
         req.setAttribute("stu", studentByStuId);
         req.setAttribute("grade", grade);
         req.getRequestDispatcher("edit.jsp").forward(req, resp);
@@ -167,40 +183,111 @@ public class StudentSerlvet extends HttpServlet {
     protected void StuList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 1.获取参数
         // 1.1 获取模糊查参数
-        String stuName = req.getParameter("stuName");
-        String stuNo = req.getParameter("stuNo");
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setStuName(req.getParameter("stuName"));
+        pageInfo.setStuNo(req.getParameter("stuNo"));
         String sex1 = req.getParameter("sex");
-        int sex = -1;
+        pageInfo.setSex(SexEnum.NOTSPECIFIED.type);
         if(sex1!=null && sex1!="")
-            sex = Integer.parseInt(sex1);
+            pageInfo.setSex(Integer.parseInt(sex1));
         // 1.2 获取分页参数
         String pageIndex1 = req.getParameter("pageIndex");
-        int pageIndex = 1;
+        pageInfo.setPageIndex(1);
         if(pageIndex1!=null && pageIndex1!="")
-            pageIndex = Integer.parseInt(pageIndex1);
-        int pageSize = 5;
+            pageInfo.setPageIndex(Integer.parseInt(pageIndex1));
+        pageInfo.setPageSize(5);
 
         // 2.调用service层方法
         StudentServiceImp studentServiceImp = new StudentServiceImp();
-        List<Student> studentMessage = studentServiceImp.getStudentMessage(stuName, stuNo, sex, pageIndex, pageSize);
+        List<Student> studentMessage = studentServiceImp.getStudentMessage(pageInfo.getStuName(),
+                pageInfo.getStuNo(), pageInfo.getSex(), pageInfo.getPageIndex(), pageInfo.getPageSize());
+        pageInfo.setStuList(studentMessage);
         // 查询数据总条数
-        int indexTotal = studentServiceImp.getIndexTotal(stuName, stuNo, sex);
-        // 根据数据总条数和一页大小计算总页数
-        int pageTotal = (int)Math.ceil((double) indexTotal / pageSize);
+        pageInfo.setIndexTotal(studentServiceImp.getIndexTotal(pageInfo.getStuName(), pageInfo.getStuNo(), pageInfo.getSex()));
 
         // 3.跳转页面
-        // 3.1 存储查询结果
-        req.setAttribute("stuList", studentMessage);
-        // 3.2 存储模糊查相关
-        req.setAttribute("stuName", stuName);
-        req.setAttribute("stuNo", stuNo);
-        req.setAttribute("sex", sex);
-        // 3.3 存储分页相关
-        req.setAttribute("pageSize", pageSize);
-        req.setAttribute("indexTotal", indexTotal);
-        req.setAttribute("pageTotal", pageTotal);
-        req.setAttribute("pageIndex", pageIndex);
+        // 存储pageInfo
+        req.setAttribute("pageInfo", pageInfo);
         req.getRequestDispatcher("list.jsp").forward(req, resp);
     }
 
+    /**
+     * 学号检查
+     */
+    protected void CkeckStuNo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 1.获取参数
+        String stuNo = req.getParameter("stuNo");
+        // 2.调用service层方法
+        StudentServiceImp studentServiceImp = new StudentServiceImp();
+        Student student = studentServiceImp.checkStuByStuNo(stuNo);
+
+        // 3.发送数据
+        resp.setContentType("text/html; charset=utf-8;");
+        if(student != null){
+            // 学号重复
+            resp.getWriter().print("exist");
+        }else{
+            resp.getWriter().print("ok");
+        }
+    }
+
+    /**
+     * 邮箱检查
+     */
+    protected void CheckEmail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 1.获取参数
+        String email = req.getParameter("email");
+        // 2.调用service层方法
+        StudentServiceImp studentServiceImp = new StudentServiceImp();
+        Student student = studentServiceImp.checkStuByEmail(email);
+
+        // 3.发送数据
+        resp.setContentType("text/html; charset=utf-8;");
+        if(student != null){
+            // 学号重复
+            resp.getWriter().print("exist");
+        }else{
+            resp.getWriter().print("ok");
+        }
+    }
+
+    /**
+     * 手机号检查
+     */
+    protected void CkeckPhone(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 1.获取参数
+        String phone = req.getParameter("phone");
+        // 2.调用service层方法
+        StudentServiceImp studentServiceImp = new StudentServiceImp();
+        Student student = studentServiceImp.checkStuByPhone(phone);
+
+        // 3.发送数据
+        resp.setContentType("text/html; charset=utf-8;");
+        if(student != null){
+            // 学号重复
+            resp.getWriter().print("exist");
+        }else{
+            resp.getWriter().print("ok");
+        }
+    }
+
+    /**
+     * 身份证号检查
+     */
+    protected void CkeckIdNumber(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // 1.获取参数
+        String idNumber = req.getParameter("idNumber");
+        // 2.调用service层方法
+        StudentServiceImp studentServiceImp = new StudentServiceImp();
+        Student student = studentServiceImp.checkStuByIdNumber(idNumber);
+
+        // 3.发送数据
+        resp.setContentType("text/html; charset=utf-8;");
+        if(student != null){
+            // 学号重复
+            resp.getWriter().print("exist");
+        }else{
+            resp.getWriter().print("ok");
+        }
+    }
 }

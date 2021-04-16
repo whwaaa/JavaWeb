@@ -21,7 +21,7 @@ public class StudentDaoImp extends DBUtils implements StudentDao {
 
     @Override
     public int getPageIndexTotal(String stuName, String stuNo, int sex) {
-        StringBuilder sql = new StringBuilder(" select COUNT(*) from student where 1=1 ");
+        StringBuilder sql = new StringBuilder(" select COUNT(*) from student where 1=1 and state!=4 ");
         List list = new ArrayList<>();
         if (stuName!=null && stuName!="") {
             sql.append(" AND stuname LIKE ? ");
@@ -53,7 +53,7 @@ public class StudentDaoImp extends DBUtils implements StudentDao {
 
     @Override
     public List<Student> getStudentMessage(String stuName, String stuNo, int sex, int pageIndex, int pageSize) {
-        StringBuilder sql = new StringBuilder(" select * from student where 1=1 ");
+        StringBuilder sql = new StringBuilder(" select * from student where 1=1 and state!=4 ");
         List list = new ArrayList<>();
         if (stuName!=null && stuName!="") {
             sql.append(" AND stuname LIKE ? ");
@@ -195,4 +195,101 @@ public class StudentDaoImp extends DBUtils implements StudentDao {
         int update = update(sql, list);
         return update;
     }
+
+    @Override
+    public Student checkStuByStuNo(String stuNo) {
+        Student student = null;
+        try {
+            String sql = "select * from student where stuno=?";
+            List list = new ArrayList();
+            list.add(stuNo);
+            ResultSet resultSet = query(sql, list);
+            if(resultSet != null){
+                while(resultSet.next()){
+                    student = new Student();
+                    student.setStuNo(resultSet.getString("stuno"));
+                    return student;
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            closeAll();
+        }
+
+        return null;
+    }
+
+    @Override
+    public Student checkStuByEmail(String email) {
+        Student student = null;
+        try {
+            String sql = "select * from student where email=?";
+            List list = new ArrayList();
+            list.add(email);
+            ResultSet resultSet = query(sql, list);
+            if(resultSet != null){
+                while(resultSet.next()){
+                    student = new Student();
+                    student.setEmail(resultSet.getString("email"));
+                    return student;
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            closeAll();
+        }
+
+        return null;
+    }
+
+    @Override
+    public Student checkStuByPhone(String phone) {
+        Student student = null;
+        try {
+            String sql = "select * from student where phone=?";
+            List list = new ArrayList();
+            list.add(phone);
+            ResultSet resultSet = query(sql, list);
+            if(resultSet != null){
+                while(resultSet.next()){
+                    student = new Student();
+                    student.setPhone(resultSet.getString("phone"));
+                    return student;
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            closeAll();
+        }
+
+        return null;
+    }
+
+    @Override
+    public Student checkStuByIdNumber(String idNumber) {
+        Student student = null;
+        try {
+            String sql = "select * from student where idnumber=?";
+            List list = new ArrayList();
+            list.add(idNumber);
+            ResultSet resultSet = query(sql, list);
+            if(resultSet != null){
+                while(resultSet.next()){
+                    student = new Student();
+                    student.setIdNumber(resultSet.getString("idnumber"));
+                    return student;
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            closeAll();
+        }
+
+        return null;
+    }
+
 }

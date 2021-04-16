@@ -1,5 +1,7 @@
 package com.xiaojumao;
 
+import com.xiaojumao.utils.SexEnum;
+
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -13,8 +15,7 @@ import java.util.GregorianCalendar;
  */
 public class test {
     public static void main(String[] args) {
-        double ceil = Math.ceil(5.0 / 2);
-        System.out.println(ceil);
+        Integer type = SexEnum.MALE.type;
 
     }
 }

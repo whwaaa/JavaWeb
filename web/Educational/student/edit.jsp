@@ -14,7 +14,125 @@
     <script src="../../Script/jBox/i18n/jquery.jBox-zh-CN.js" type="text/javascript"></script>
     <script src="../../Script/Common.js" type="text/javascript"></script>
     <script src="../../Script/Data.js" type="text/javascript"></script>
-    
+
+    <script>
+        var ckeckStuNoFlag = false;
+        var checkEmailFlag = true;
+        var checkPhoneFlag = true;
+        var checkIdNumberFlag = false;
+
+        function ckeckStuNo(input){
+            $(function(){
+                if($(input).val().trim() == "${stu.stuNo}"){
+                    $("#stuNoErr").css("display","none");
+                    ckeckStuNoFlag = true;
+                    return;
+                }
+                if($(input).val().trim()!=""){
+                    $.post("/Educational/student/CkeckStuNo", {"stuNo":$(input).val()}, function(res){
+                        if(res.trim() == "exist"){
+                            $("#stuNoErr").css("display","inline-block");
+                            $("#stuNoErr").text("学号重复,请重新输入");
+                            ckeckStuNoFlag = false;
+                        }else{
+                            $("#stuNoErr").css("display","none");
+                            ckeckStuNoFlag = true;
+                        }
+                    })
+                }else{
+                    $("#stuNoErr").css("display","inline-block");
+                    $("#stuNoErr").text("学号不能为空");
+                    ckeckStuNoFlag = false;
+                }
+            })
+        }
+
+        function checkEmail(input){
+            $(function(){
+                if($(input).val().trim() == "${stu.email}"){
+                    $("#emailErr").css("display","none");
+                    checkEmailFlag = true;
+                    return;
+                }
+                if($(input).val().trim()!=""){
+                    $.post("/Educational/student/CheckEmail", {"email":$(input).val()}, function(res){
+                        if(res.trim() == "exist"){
+                            $("#emailErr").css("display","inline-block");
+                            $("#emailErr").text("邮箱重复,请重新输入");
+                            checkEmailFlag = false;
+                        }else{
+                            $("#emailErr").css("display","none");
+                            checkEmailFlag = true;
+                        }
+                    })
+                }else{
+                    $("#emailErr").css("display","none");
+                    checkEmailFlag = true;
+                }
+            })
+        }
+
+        function checkPhone(input){
+            $(function(){
+                if($(input).val().trim() == "${stu.phone}"){
+                    $("#phoneErr").css("display","none");
+                    checkPhoneFlag = true;
+                    return;
+                }
+                if($(input).val().trim()!=""){
+                    $.post("/Educational/student/CkeckPhone", {"phone":$(input).val()}, function(res){
+                        if(res.trim() == "exist"){
+                            $("#phoneErr").css("display","inline-block");
+                            $("#phoneErr").text("电话号重复,请重新输入");
+                            checkPhoneFlag = false;
+                        }else{
+                            $("#phoneErr").css("display","none");
+                            checkPhoneFlag = true;
+                        }
+                    })
+                }else{
+                    $("#phoneErr").css("display","none");
+                    checkPhoneFlag = true;
+                }
+            })
+        }
+
+        function checkIdNumber(input){
+            $(function(){
+                if($(input).val().trim() == "${stu.idNumber}"){
+                    $("#idNumberErr").css("display","none");
+                    checkIdNumberFlag = true;
+                    return;
+                }
+                if($(input).val().trim()!=""){
+                    $.post("/Educational/student/CkeckIdNumber", {"idNumber":$(input).val()}, function(res){
+                        if(res.trim() == "exist"){
+                            $("#idNumberErr").css("display","inline-block");
+                            $("#idNumberErr").text("身份证号重复,请重新输入");
+                            checkIdNumberFlag = false;
+                        }else{
+                            $("#idNumberErr").css("display","none");
+                            checkIdNumberFlag = true;
+                        }
+                    })
+                }else{
+                    $("#idNumberErr").css("display","inline-block");
+                    $("#idNumberErr").text("身份证号不能为空");
+                    checkIdNumberFlag = false;
+                }
+            })
+        }
+
+        function ckeckInfo(){
+            ckeckStuNo($("input[name='stuNo']")[0]);
+            checkEmail($("input[name='email']")[0]);
+            checkPhone($("input[name='phone']")[0]);
+            checkIdNumber($("input[name='idNumber']")[0]);
+            if(ckeckStuNoFlag && checkEmailFlag && checkPhoneFlag && checkIdNumberFlag){
+                $("#form").submit();
+            }
+        }
+    </script>
 
 </head>
 <body>
@@ -29,13 +147,14 @@
 <div class="cztable">
     <form action="/Educational/student/EditServlet" method="post">
 	<table border="1" width="100%" class="table_a">
-        <input type="hidden" name="pageIndex" value="${pageIndex}" />
+        <input type="hidden" name="pageIndex" value="${pageInfo.pageIndex}" />
         <input type="hidden" name="stuId" value="${stu.stuId}" />
 
                 <tr  width="120px;">
                     <td width="10%">学号：<span style="color:red">*</span>：</td>
                     <td>
-						<input type="text"  name="stuNo" value="${stu.stuNo}" />
+                        <input type="text"  name="stuNo" value="${stu.stuNo}" onblur="ckeckStuNo(this)" />
+                        <p id="stuNoErr" style="display:none;color:red;"></p>
 					</td>
                 </tr>
 
@@ -77,14 +196,16 @@
 				<tr>
                     <td>EMAIL：</td>
                     <td>
-                        <input type="text" name="email" value="${stu.email}" />
+                        <input type="text" name="email" value="${stu.email}" onblur="checkEmail(this)"/>
+                        <p id="emailErr" style="display:none;color:red;"></p>
                     </td>                
                 </tr>
 
 				<tr>
                     <td>联系电话：</td>
                     <td>
-                        <input type="text" name="phone" value="${stu.phone}" />
+                        <input type="text" name="phone" value="${stu.phone}" onblur="checkPhone(this)"/>
+                        <p id="phoneErr" style="display:none;color:red;"></p>
                     </td>                
                 </tr>
 
@@ -110,7 +231,8 @@
 				<tr>
                     <td>身份证号：</td>
                     <td>
-                        <input type="text" name="idNumber" value="${stu.idNumber}" />
+                        <input type="text" name="idNumber" value="${stu.idNumber}" onblur="checkIdNumber(this)"/>
+                        <p id="idNumberErr" style="display:none;color:red;"></p>
                     </td>
                 </tr>
 				
