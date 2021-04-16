@@ -106,7 +106,7 @@ public class StudentDaoImp extends DBUtils implements StudentDao {
 
     @Override
     public Student getStudentByStuId(Integer stuId) {
-        String sql = "select * from student where stuid=?";
+        String sql = "select * from student where stuid=? ";
         List<String> list = new ArrayList<>();
         list.add(stuId.toString());
         ResultSet resultSet = query(sql, list);
@@ -176,7 +176,7 @@ public class StudentDaoImp extends DBUtils implements StudentDao {
     @Override
     public int addStudent(Student student) {
         String sql = "INSERT INTO student(stuNo,stuName,gid,sex,email,phone," +
-                "registered,address,politics,idNumber,profession,introduction,regdate) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "registered,address,politics,idNumber,profession,introduction,regdate,state) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,1)";
         List<String> list = new ArrayList<>();
         list.add(student.getStuNo());
         list.add(student.getStuName());
