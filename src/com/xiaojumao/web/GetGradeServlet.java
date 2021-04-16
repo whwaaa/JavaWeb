@@ -1,7 +1,7 @@
 package com.xiaojumao.web;
 
-import com.xiaojumao.bean.Student;
-import com.xiaojumao.service.imp.StudentServiceImp;
+import com.xiaojumao.bean.Grade;
+import com.xiaojumao.service.imp.GradeServiceImp;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,27 +14,24 @@ import java.util.List;
 /**
  * @Author: whw
  * @Description:
- * @Date Created in 2021-04-15 10:42
+ * @Date Created in 2021-04-16 11:55
  * @Modified By:
  */
-@WebServlet(urlPatterns = "/Educational/student/DeleteStuServlet")
-public class DeleteStuServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/Educational/student/GetGradeServlet")
+public class GetGradeServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 1.获取参数
-        String stuId = req.getParameter("stuId");
+        // 获取年级信息
+        GradeServiceImp gradeServiceImp = new GradeServiceImp();
+        List<Grade> grade = gradeServiceImp.getGrade();
         // 获取分页参数
         String pageIndex1 = req.getParameter("pageIndex");
         int pageIndex = 1;
         if(pageIndex1!=null && pageIndex1!="")
             pageIndex = Integer.parseInt(pageIndex1);
-
-        // 2.调取service层方法
-        // 根据stuId删除数据库信息
-        StudentServiceImp studentServiceImp = new StudentServiceImp();
-        boolean b = studentServiceImp.deleteStuByStuId(stuId);
-
-        // 3.跳转页面
-        req.getRequestDispatcher("StuList?pageIndex" + pageIndex).forward(req, resp);
+        // 跳转页面
+        req.setAttribute("grade", grade);
+        req.setAttribute("pageIndex", pageIndex);
+        req.getRequestDispatcher("add.jsp").forward(req, resp);
     }
 }

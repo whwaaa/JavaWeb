@@ -19,7 +19,6 @@ public class OutServlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 1.获取参数
         // 2.调取Service层方法
-
         // 3.跳转页面
         req.getSession().invalidate();
         resp.setContentType("text/html; charset=utf-8;");

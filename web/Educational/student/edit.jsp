@@ -51,27 +51,9 @@
 
                     <td>
                         <select name="gid">
-
-                            <c:choose>
-
-                                <c:when test="${stu.gid==1}">
-                                    <option name="gid" selected value="1">一班</option>
-                                    <option name="gid" value="2">二班</option>
-                                    <option name="gid" value="3">三班</option>
-                                </c:when>
-                                <c:when test="${stu.gid==2}">
-                                    <option name="gid" value="1">一班</option>
-                                    <option name="gid" selected value="2">二班</option>
-                                    <option name="gid" value="3">三班</option>
-                                </c:when>
-                                <c:when test="${stu.gid==3}">
-                                    <option name="gid" value="1">一班</option>
-                                    <option name="gid" value="2">二班</option>
-                                    <option name="gid" selected value="3">三班</option>
-                                </c:when>
-
-                            </c:choose>
-
+                            <c:forEach items="${grade}" var="grad">
+                                <option name="gid" ${grad.gradeId==stu.gid?"selected":""} value="${grad.gradeId}">${grad.gradeName}</option>
+                            </c:forEach>
                         </select>
                     </td>
                 </tr>
