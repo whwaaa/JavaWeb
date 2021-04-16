@@ -212,7 +212,7 @@ public class StudentSerlvet extends HttpServlet {
     }
 
     /**
-     * 学号检查
+     * 学号重复检查
      */
     protected void CkeckStuNo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 1.获取参数
@@ -232,7 +232,7 @@ public class StudentSerlvet extends HttpServlet {
     }
 
     /**
-     * 邮箱检查
+     * 邮箱重复检查
      */
     protected void CheckEmail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 1.获取参数
@@ -252,7 +252,7 @@ public class StudentSerlvet extends HttpServlet {
     }
 
     /**
-     * 手机号检查
+     * 手机号重复检查
      */
     protected void CkeckPhone(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 1.获取参数
@@ -272,7 +272,7 @@ public class StudentSerlvet extends HttpServlet {
     }
 
     /**
-     * 身份证号检查
+     * 身份证号重复检查
      */
     protected void CkeckIdNumber(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // 1.获取参数
