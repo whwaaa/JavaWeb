@@ -104,7 +104,7 @@ public class StudentSerlvet extends HttpServlet {
         String stuId = req.getParameter("stuId");
 
         // 2.调取service层方法
-        // 根据stuId删除数据库信息
+        // 根据stuId修改数据库信息(state修改为4即为删除)
         StudentServiceImp studentServiceImp = new StudentServiceImp();
         boolean b = studentServiceImp.deleteStuByStuId(stuId);
 

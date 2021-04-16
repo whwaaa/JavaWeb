@@ -3,6 +3,7 @@ package com.xiaojumao.dao.imp;
 import com.xiaojumao.bean.Student;
 import com.xiaojumao.dao.DBUtils;
 import com.xiaojumao.dao.StudentDao;
+import com.xiaojumao.utils.StateEnum;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -166,7 +167,7 @@ public class StudentDaoImp extends DBUtils implements StudentDao {
 
     @Override
     public int deleteStuByStuId(String stuId) {
-        String sql = "delete from student where stuid=?";
+        String sql = "update student set state=" + StateEnum.DELETE.type + " where stuid=?";
         List<String> list = new ArrayList<>();
         list.add(stuId);
         int update = update(sql, list);
